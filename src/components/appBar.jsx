@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
+import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
 
 
 const TopAppBarStyle = styled('div')({
@@ -27,6 +29,13 @@ const TopAppBar =() => {
         <AppBarContent>
           Dashboard
         </AppBarContent>
+        <ul>
+          <li>
+            <Link to='/' >
+              <FaSignInAlt />
+            </Link>
+          </li>
+        </ul>
       </TopAppBarStyle>
     </>
   );

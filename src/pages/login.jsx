@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from '@mui/system';
 import { CssBaseline, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { signinUser, getLorems } from '../features/auth/auth';
+
 
 // const style = {
     
@@ -50,12 +53,21 @@ const theme = createTheme({
     },
   });
 
-const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("form submitted");
-}
+
 
 const LoginUser = () => {
+  const [userState, setUserState] = useState({});
+  const user = useSelector((state) => state.userAuth.data)
+
+  const dispatcher = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    dispatcher(signinUser(userState));
+    // dispatcher(getLorems());
+}
+
   return (
     <>
         <CssBaseline />
@@ -66,16 +78,29 @@ const LoginUser = () => {
                 
             <form onSubmit={handleSubmit} >    
                 
+                <span>{user}</span>
                 
                 <FormInputs sx={{ marginTop:'22px' }}>
                     <FormGroup>
                     <label>Email</label>
-                    <TextField type={'email'} placeholder='Type your email address here' required id="outlined-basic" sx={{ width:656 }} size="small" autoComplete='off'  />
+                    <TextField type={'email'} placeholder='Type your email address here' required id="outlined-basic" sx={{ width:656 }} size="small" autoComplete='off' onChange={ (e)=>{
+                      const email = e.target.value;
+                      // TODO: Validation
+
+                      // add content to local state
+                      setUserState({...userState, email});
+                    }}  />
                     </FormGroup>
 
                     <FormGroup sx={{ marginTop:'22px' }}>
                     <label>Password</label>
-                    <TextField placeholder='Type your password here' type={'password'} id="outlined-basic" sx={{ width: 656 }} size="small" autoComplete='off' />
+                    <TextField placeholder='Type your password here' type={'password'} id="outlined-basic" sx={{ width: 656 }} size="small" autoComplete='off' onChange={ (e)=>{
+                      const password = e.target.value;
+                      // TODO: Validation
+
+                      // add content to local state
+                      setUserState({...userState, password});
+                    }} />
                     </FormGroup>
                 </FormInputs>
                 
