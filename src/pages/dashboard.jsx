@@ -20,8 +20,7 @@ const DashBoardContent = styled('div')({
 })
 
 const ItemsCardList = styled('div')({
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: 'grid',
   flexDirection: 'row',
   width: '80%',
   padding: '32px',
@@ -64,21 +63,18 @@ const DashboardPage = () => {
           <TopAppBar />
  
           <div className="dashContainer">
-            <ItemsCardList>
+           
 
               {items.length > 0 ? (
                 <div className='goals'>
-                  {items.map((item) => (
-                    <ItemCards key={item._id} content={item.description} title={item.name} />
+                  {items.map((item, i) => (
+                    <ItemCards key={item._id} item={item} />
                   ))}
                 </div>
               ) : (
                 <h3>You dont have any item</h3>
               )}
-              
-              
-            </ItemsCardList>
-            
+           
           </div>
             
             

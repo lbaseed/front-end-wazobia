@@ -24,6 +24,8 @@ export default function NewItem() {
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState({});
 
+  const dispatch = useDispatch()
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -32,10 +34,20 @@ export default function NewItem() {
     setOpen(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+      
+      if(itemData.name){
+        dispatch(createItem(itemData))
+
+        setOpen(false)
+      }
+  }
+
 
 
   return (
-    <div style={{ 'width' : '500px' }}>
+    <div>
       
       <div className="fab">
       <Fab color="primary" onClick={handleClickOpen} aria-label="add">
@@ -43,13 +55,14 @@ export default function NewItem() {
         </Fab>
         </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Notes</DialogTitle>
-        <DialogContent width={500}>
+     
+        <DialogTitle>Create Item</DialogTitle>
+        <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here. We
             will send updates occasionally.
           </DialogContentText>
-          
+          <form>
           <FormGroup>
             <label>Name</label>
             <TextField autoFocus type={'text'} placeholder='Add Notes' required id="outlined-basic" fullWidth size="small" autoComplete='off' onChange={ (e)=>{
@@ -71,11 +84,13 @@ export default function NewItem() {
                 setItemData({...itemData, description});
             }}  />
             </FormGroup>
+            </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={handleSubmit}>Create Event</Button>
         </DialogActions>
+      
       </Dialog>
     </div>
   );

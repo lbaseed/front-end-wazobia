@@ -17,17 +17,55 @@ const initialState = {
     message : ""
 };
 
+
+
+// create new item
+export const createItem = createAsyncThunk('item/create', async (itemData, thunkAPI)=> {
+    // prepare items for api call
+
+    const payload = JSON.stringify({
+        query: `
+        mutation{
+            createItem(name:"${itemData.name}", description:"${itemData.description}"){
+              uuid
+              name
+              description
+              created_at
+              updated_at
+            }
+          }
+        `
+    })
+    const options = {
+        headers: {
+            "content-type" : "application/json",
+            "authorization": `Bearer ${token.token}`
+        }
+    }
+    try {
+        // create new item here
+        const response = await axios.post(API_URL, payload, options)
+        return response.data
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Read all items
 export const getItems = createAsyncThunk('items/all', async (thunkAPI)=> {
     // prepare paylaod for api
     const payload = JSON.stringify({
         query: `
         query {
-            getItems(page:1 count:5){
+            getItems(page:1 count:10){
               items{
                 _id  
                 uuid
                 name
                 description
+                created_at
+                updated_at
               }
             }
           }
@@ -51,22 +89,70 @@ export const getItems = createAsyncThunk('items/all', async (thunkAPI)=> {
     }
 })
 
-export const createItem = createAsyncThunk('item/create', async (itemData, thunkAPI)=> {
+// Update item
+export const UpdateItem = createAsyncThunk('item/create', async (itemData, thunkAPI)=> {
     // prepare items for api call
 
     const payload = JSON.stringify({
         query: `
-        
+        mutation{
+            createItem(uuid: "" name:"${itemData.name}" description:"${itemData.description}"){
+              uuid
+              name
+              created_at
+              updated_at
+            }
+          }
         `
     })
+    const options = {
+        headers: {
+            "content-type" : "application/json",
+            "authorization": `Bearer ${token.token}`
+        }
+    }
     try {
         // create new item here
-        
+        const response = await axios.post(API_URL, payload, options)
+        return response.data
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+// delete Item
+export const deleteItem = createAsyncThunk('item/delete', async (item, thunkAPI) => {
+
+    // payload
+    const payload = JSON.stringify({
+        query: `
+        mutation {
+            deleteItem(uuid:"${item}"){
+                        uuid
+            }
+          }
+        `
+    });
+
+    const options = {
+        headers: {
+            "content-type" : "application/json",
+            "authorization": `Bearer ${token.token}`
+        }
+    }
+
+
+    try {
+        // perform delete here
+        const response = await axios.post(API_URL, payload, options)
+        return response.data
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 export const itemSlice = createSlice({
     name: "items",
@@ -85,6 +171,35 @@ export const itemSlice = createSlice({
             state.items = action.payload.data.getItems.items
         })
         .addCase(getItems.rejected, (state, action) => {
+            state.isLoading= false
+            state.isError = true
+            state.message = action.payload
+        })
+        .addCase(createItem.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(createItem.fulfilled, (state, action) => {
+            state.isLoading= false
+            state.isSuccess = true
+            state.items.push(action.payload.data.createItem)
+        })
+        .addCase(createItem.rejected, (state, action) => {
+            state.isLoading= false
+            state.isError = true
+            state.message = action.payload
+        })
+        .addCase(deleteItem.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(deleteItem.fulfilled, (state, action) => {
+            state.isLoading= false
+            state.isSuccess = true
+            const id = action.payload.data.deleteItem.uuid
+            state.items = state.items.filter(
+                (item) => item.uuid !== id
+            )
+        })
+        .addCase(deleteItem.rejected, (state, action) => {
             state.isLoading= false
             state.isError = true
             state.message = action.payload
