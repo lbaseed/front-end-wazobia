@@ -32,12 +32,13 @@ const DashboardPage = () => {
   const navigate = useNavigate()
   // const dispatch = useDispatch()
   const {user} = useSelector((state) => state.userAuth)
-
+  
     useEffect(() => {
       if(!user) {
         navigate('/login')
       }
     }, [])
+
   return (
     <>
     <div className='container'>
@@ -47,7 +48,7 @@ const DashboardPage = () => {
 
           <div className="dashContainer">
             <ItemsCardList>
-              <ItemCards content={user.data.login.user}  />
+              {/* <ItemCards content={user.user}  /> */}
             </ItemsCardList>
             
           </div>

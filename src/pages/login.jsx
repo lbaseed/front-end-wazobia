@@ -71,7 +71,10 @@ const LoginUser = () => {
 
     if(isError) { toast.error(message)}
 
-    if(isSuccess || user) { navigate('/')}
+    if(isSuccess || user) { 
+      navigate('/');
+      toast.success(message);
+    }
 
     // dispatch(reset())
 
