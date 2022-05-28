@@ -53,8 +53,9 @@ const TopAppBar =() => {
         </AppBarContent>
         
           <AppBarContentRight>
-             <Link to='/login' onClick={onLogout} >
-                Logout <FaSignInAlt />
+              {user.user.first_name} {user.user.last_name}
+             <Link to='/login' onClick={onLogout} style={{ textDecoration:'none', marginLeft:'5px' }} >
+                <FaSignInAlt />
              </Link>
           </AppBarContentRight> 
           

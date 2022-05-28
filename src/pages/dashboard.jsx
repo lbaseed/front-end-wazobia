@@ -60,7 +60,11 @@ const DashboardPage = () => {
     <>
     <div className='container'>
         <DashBoardContent>
-          <VerifyEmailNotification />
+          {/* check if acount is verified */}
+          {
+            user.user.email_verified_at === null ? <VerifyEmailNotification /> : ""
+          }
+          
           <TopAppBar />
  
           <div className="dashContainer">

@@ -9,6 +9,7 @@ const API_URL = 'https://test-api.sytbuilder.com/graphql'
 
 const initialState = {
     isLoggedIn: false,
+    isLoggedOut: true,
     user: user ? user : null,
     isLoading: false,
     isSuccess: false,
@@ -185,21 +186,25 @@ export const userAuthSlice = createSlice({
             state.user = action.payload.data.login
             localStorage.setItem('user', JSON.stringify(action.payload.data.login))
             state.message = "Login Success"
+            state.isLoggedOut = false
           }
           if(action.payload.errors){
-            state.isSuccess = true
-            state.message = action.payload.errors.message
+            const msg = action.payload.errors.map((err)=> err.message)
+            state.message = msg[0]
           }
           
         })
         .addCase(login.rejected, (state, action) => {
           state.isLoading= false
           state.isError = true
-          state.message = action.payload.errors.map((msg) => msg.message)
+          state.message = action.payload.errors
           state.user = null
         })
         .addCase(logout, (state) => {
           state.user = null
+          state.isLoggedOut = true
+          state.isLoggedIn = false
+          state.message = "Logged Out"
         })
         .addCase(resendVerification.pending, (state) => {
           state.isLoading = true

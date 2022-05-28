@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { resendVerification } from '../features/auth/auth'
+import { toast } from 'react-toastify';
+
 
 
 
