@@ -34,7 +34,7 @@ const ItemCards = ({item}) => {
               </div>
               
                 <div className="cardButtons">
-                  <Button color="grey" style={{marginTop:'10px',marginRight: '20px', height:36, textTransform: 'initial', fontSize:14 }} variant="contained">
+                  <Button color="grey" style={{marginTop:'10px',marginRight: '30px', height:36, textTransform: 'initial', fontSize:14 }} variant="contained">
                       Edit
                   </Button>
                   <ThemeProvider theme={theme}>

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createAccount, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Link as MuiLink } from '@mui/material';
 
 // const style = {
     
@@ -94,7 +95,7 @@ const CreatAccount = () => {
        <div className='container'>
             <AccountCard>   
                 <span className="pageHead" >Create an Account</span>
-                <span >Already have an account? Log in</span>   
+                <span >Already have an account? <Link to='/login' style={{ textDecoration: 'none' }} >Login</Link> </span>   
                 
             <form onSubmit={handleSubmit} >    
                 <Row>

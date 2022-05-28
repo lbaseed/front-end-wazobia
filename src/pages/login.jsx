@@ -93,7 +93,7 @@ const LoginUser = () => {
        <div className='container'>
             <AccountCard>   
                 <span className="pageHead" >Log in</span>
-                <span >If you have no account, Sign up</span>   
+                <span >If you have no account, <Link to='/signup' style={{ textDecoration: 'none' }} >Sign Up</Link> </span>   
                 
             <form onSubmit={handleSubmit} > 
                 

@@ -5,8 +5,9 @@ import axios from "axios";
 
 const API_URL = 'https://test-api.sytbuilder.com/graphql'
 
-const token = JSON.parse(localStorage.getItem('user'));
-
+// const token = JSON.parse(localStorage.getItem('user'));
+// const tk = getState().userAuth.user.token;
+// console.log(tk)
 // console.log(token.token);
 
 const initialState = {
@@ -36,10 +37,11 @@ export const createItem = createAsyncThunk('item/create', async (itemData, thunk
           }
         `
     })
+    const token = thunkAPI.getState().userAuth.user.token
     const options = {
         headers: {
             "content-type" : "application/json",
-            "authorization": `Bearer ${token.token}`
+            "authorization": `Bearer ${token}`
         }
     }
     try {
@@ -53,7 +55,7 @@ export const createItem = createAsyncThunk('item/create', async (itemData, thunk
 })
 
 // Read all items
-export const getItems = createAsyncThunk('items/all', async (thunkAPI)=> {
+export const getItems = createAsyncThunk('items/all', async (_, thunkAPI)=> {
     // prepare paylaod for api
     const payload = JSON.stringify({
         query: `
@@ -71,15 +73,17 @@ export const getItems = createAsyncThunk('items/all', async (thunkAPI)=> {
           }
         `
     });
-
+    const token = thunkAPI.getState().userAuth.user.token
+    
     const options = {
         headers: {
             "content-type" : "application/json",
-            "authorization": `Bearer ${token.token}`
+            "authorization": `Bearer ${token}`
         }
     }
 
     try {
+        
         // get list of all items
         const response = await axios.post(API_URL, payload, options)
         return response.data
@@ -105,10 +109,11 @@ export const UpdateItem = createAsyncThunk('item/create', async (itemData, thunk
           }
         `
     })
+    const token = thunkAPI.getState().userAuth.user.token
     const options = {
         headers: {
             "content-type" : "application/json",
-            "authorization": `Bearer ${token.token}`
+            "authorization": `Bearer ${token}`
         }
     }
     try {
@@ -134,11 +139,11 @@ export const deleteItem = createAsyncThunk('item/delete', async (item, thunkAPI)
           }
         `
     });
-
+    const token = thunkAPI.getState().userAuth.user.token
     const options = {
         headers: {
             "content-type" : "application/json",
-            "authorization": `Bearer ${token.token}`
+            "authorization": `Bearer ${token}`
         }
     }
 

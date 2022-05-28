@@ -20,9 +20,9 @@ code {
 
 .dashContainer{
   display: grid;
-  flex-direction: column;
-  width:80%;
-  border: 1px solid #000;
+  width:90%;
+  margin: auto;
+  text-align: left;
 }
 .card{
   display: flex;
@@ -34,8 +34,7 @@ code {
   width: 420px;
   height: 235px;
   padding: 20px;
-  gap:10px;
-  margin: 10px;
+  margin: 32px;
   display: inline-grid;
   position: relative;
 }
