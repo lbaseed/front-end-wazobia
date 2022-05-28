@@ -73,7 +73,7 @@ const LoginUser = () => {
 
     if(isSuccess || user) { navigate('/')}
 
-    dispatch(reset())
+    // dispatch(reset())
 
   }, [user, isError, isSuccess, message, navigate, dispatch])
 

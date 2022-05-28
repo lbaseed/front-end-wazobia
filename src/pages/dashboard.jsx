@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
 import TopAppBar from '../components/appBar'
 import VerifyEmailNotification from '../components/verifyEmailNotification'
 import NewItem from '../components/newItem';
 import ItemCards from '../components/ItemCards';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react'
 
 
 const DashBoardContent = styled('div')({
@@ -27,6 +29,15 @@ const ItemsCardList = styled('div')({
 
 
 const DashboardPage = () => {
+  const navigate = useNavigate()
+  // const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.userAuth)
+
+    useEffect(() => {
+      if(!user) {
+        navigate('/login')
+      }
+    }, [])
   return (
     <>
     <div className='container'>
@@ -36,7 +47,7 @@ const DashboardPage = () => {
 
           <div className="dashContainer">
             <ItemsCardList>
-              <ItemCards />
+              <ItemCards content={user.data.login.user}  />
             </ItemsCardList>
             
           </div>

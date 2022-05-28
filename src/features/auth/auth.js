@@ -120,7 +120,7 @@ export const getLorems = createAsyncThunk(
         if(response.data){
             localStorage.setItem('user', JSON.stringify(response.data))
         }
-        // return response.data
+        return response.data
       } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
         return thunkAPI.rejectWithValue(message)
@@ -134,7 +134,7 @@ export const getLorems = createAsyncThunk(
     const email = userData.email;
     const password = userData.password;
 
-      let data = JSON.stringify({
+      let payload = JSON.stringify({
           query: `
           mutation{
             login(email:"${email}", password:"${password}"){
@@ -160,12 +160,12 @@ export const getLorems = createAsyncThunk(
       }
       }
       try { 
-        const response = await axios.post(API_URL, data, options)
+        const response = await axios.post(API_URL, payload, options)
 
         if(response.data){
             localStorage.setItem('user', JSON.stringify(response.data))
         }
-        // return response.data
+        return response.data
       } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
         return thunkAPI.rejectWithValue(message)
@@ -230,6 +230,8 @@ export const userAuthSlice = createSlice({
         })
         .addCase(login.fulfilled, (state, action) => {
           state.isLoading = false
+          // check for successful login token
+
           state.isSuccess = true
           state.user = action.payload
         })
@@ -237,6 +239,9 @@ export const userAuthSlice = createSlice({
           state.isLoading= false
           state.isError = true
           state.message = action.payload
+          state.user = null
+        })
+        .addCase(logout, (state) => {
           state.user = null
         })
     }

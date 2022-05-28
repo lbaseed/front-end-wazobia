@@ -11,15 +11,15 @@ const theme = createTheme({
     },
   });
 
-const ItemCards = () => {
+const ItemCards = ({title, content}) => {
   return (
     <>
         <div className="card">
               <span className="cardKey">Name</span>
-              <span className="cardTitle">Item 1</span>
+              <span className="cardTitle">{title}</span>
               <span className="cardKey">DEscription</span>
               <div className="cardContent">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.
+                {content.uuid}
               </div>
               
                 <div className="cardButtons">

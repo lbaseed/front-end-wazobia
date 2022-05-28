@@ -2,7 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, reset } from '../features/auth/auth';
 
 const TopAppBarStyle = styled('div')({
   
@@ -33,7 +35,15 @@ const AppBarContentRight = styled('span')({
 })
 
 const TopAppBar =() => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.userAuth)
 
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate('/login')
+  }
   return (
     <>
       <TopAppBarStyle>
@@ -43,8 +53,8 @@ const TopAppBar =() => {
         </AppBarContent>
         
           <AppBarContentRight>
-             <Link to="/logout" >
-                Logout
+             <Link to='/login' onClick={onLogout} >
+                Logout <FaSignInAlt />
              </Link>
           </AppBarContentRight> 
           
