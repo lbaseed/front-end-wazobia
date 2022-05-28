@@ -6,6 +6,7 @@ import ItemCards from '../components/ItemCards';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'
+import { getItems, reset } from '../features/items/itemsSlice';
 
 
 const DashBoardContent = styled('div')({
@@ -30,14 +31,30 @@ const ItemsCardList = styled('div')({
 
 const DashboardPage = () => {
   const navigate = useNavigate()
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
+
+  
+
   const {user} = useSelector((state) => state.userAuth)
+  const {items, isLoading, isError, message} = useSelector((state) => state.items)
   
     useEffect(() => {
+      if (isError) {
+        console.log(message)
+      }
+
       if(!user) {
         navigate('/login')
       }
-    }, [])
+
+      dispatch(getItems())
+
+      return () => {
+        dispatch(reset())
+      }
+      
+    }, [user, navigate, isError, message, dispatch])
+
 
   return (
     <>
@@ -45,10 +62,21 @@ const DashboardPage = () => {
         <DashBoardContent>
           <VerifyEmailNotification />
           <TopAppBar />
-
+ 
           <div className="dashContainer">
             <ItemsCardList>
-              {/* <ItemCards content={user.user}  /> */}
+
+              {items.length > 0 ? (
+                <div className='goals'>
+                  {items.map((item) => (
+                    <ItemCards key={item._id} content={item.description} title={item.name} />
+                  ))}
+                </div>
+              ) : (
+                <h3>You dont have any item</h3>
+              )}
+              
+              
             </ItemsCardList>
             
           </div>
