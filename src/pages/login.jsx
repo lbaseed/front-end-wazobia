@@ -76,7 +76,6 @@ const LoginUser = () => {
       toast.success(message);
     }
 
-    // dispatch(reset())
 
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
@@ -84,7 +83,6 @@ const LoginUser = () => {
     e.preventDefault();
     
     dispatch(login(userState));
-    // dispatcher(getLorems());
 }
 
   return (

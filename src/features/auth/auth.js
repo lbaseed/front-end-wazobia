@@ -108,10 +108,41 @@ const initialState = {
       }
   })
 
+  // resend verification
+  export const resendVerification = createAsyncThunk('userAuth/resendVerification', async (_, thunkAPI) => {
+
+    // payload for api
+    const payload = JSON.stringify({
+      query: `
+      mutation {
+          resendVerificationEmail{
+            message
+          }
+        }
+      `
+    });
+    const token = thunkAPI.getState().userAuth.user.token
+    const options = {
+        headers: {
+            "content-type" : "application/json",
+            "authorization": `Bearer ${token}`
+        }
+    }
+
+      try {
+        const response = await axios.post(API_URL, payload, options) 
+        return response.data
+      } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
+        return thunkAPI.rejectWithValue(message)
+      }
+  })
+
   // logout user
   export const logout = () => {
     localStorage.removeItem('user');
   }
+
 
 export const userAuthSlice = createSlice({
     name: "userAuth",
@@ -139,7 +170,7 @@ export const userAuthSlice = createSlice({
         .addCase(createAccount.rejected, (state, action) => {
           state.isLoading= false
           state.isError = true
-          state.message = action.payload
+          state.message = action.payload.errors.message
           state.user = null
         })
         .addCase(login.pending, (state) => {
@@ -164,11 +195,23 @@ export const userAuthSlice = createSlice({
         .addCase(login.rejected, (state, action) => {
           state.isLoading= false
           state.isError = true
-          state.message = action.payload
+          state.message = action.payload.errors.map((msg) => msg.message)
           state.user = null
         })
         .addCase(logout, (state) => {
           state.user = null
+        })
+        .addCase(resendVerification.pending, (state) => {
+          state.isLoading = true
+        })
+        .addCase(resendVerification.fulfilled, (state, action) => {
+          state.isLoading = false
+          state.message = action.payload.data.resendVerificationEmail.message
+        })
+        .addCase(resendVerification.rejected, (state, action) => {
+          state.isLoading = false
+          state.isError = true
+          state.message = action.payload.errors.message
         })
     }
       
