@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/system';
 import { CssBaseline, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { signinUser, getLorems } from '../features/auth/auth';
+import { login, reset } from '../features/auth/auth';
+import {Link, useNavigate} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
 
 
 // const style = {
@@ -57,14 +60,27 @@ const theme = createTheme({
 
 const LoginUser = () => {
   const [userState, setUserState] = useState({});
-  const user = useSelector((state) => state.userAuth.data)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const dispatcher = useDispatch();
+
+  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.userAuth)
+
+
+  useEffect(() => {
+
+    if(isError) { toast.error(message)}
+
+    if(isSuccess || user) { navigate('/')}
+
+    dispatch(reset())
+
+  }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    dispatcher(signinUser(userState));
+    dispatch(login(userState));
     // dispatcher(getLorems());
 }
 
@@ -76,9 +92,7 @@ const LoginUser = () => {
                 <span className="pageHead" >Log in</span>
                 <span >If you have no account, Sign up</span>   
                 
-            <form onSubmit={handleSubmit} >    
-                
-                <span>{user}</span>
+            <form onSubmit={handleSubmit} > 
                 
                 <FormInputs sx={{ marginTop:'22px' }}>
                     <FormGroup>

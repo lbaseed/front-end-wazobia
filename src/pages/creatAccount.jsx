@@ -4,7 +4,7 @@ import { CssBaseline, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { signupUser, createAccount, reset } from '../features/auth/auth';
+import { createAccount, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -28,7 +28,6 @@ const AccountCard = styled('div')({
     paddingRight:32,
     paddingBottom: 40,
     marginTop:'100px',
-    // gap:'40px'
   });
 
 const FormGroup = styled('div')({
