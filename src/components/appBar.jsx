@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
+import {FaSignInAlt, FaSignOutAlt, FaUser, FaCaretDown} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, reset } from '../features/auth/auth';
@@ -53,10 +53,21 @@ const TopAppBar =() => {
         </AppBarContent>
         
           <AppBarContentRight>
+              
+
+              <div className="dropdown">
               {user.user.first_name} {user.user.last_name}
-             <Link to='/login' onClick={onLogout} style={{ textDecoration:'none', marginLeft:'5px' }} >
-                <FaSignInAlt />
-             </Link>
+                <button className="dropbtn"> 
+                  <FaCaretDown />
+                </button>
+                <div className="dropdown-content">
+                <Link to='/login' onClick={onLogout} style={{ textDecoration:'none', marginLeft:'5px' }} >
+                Log Out
+                </Link>
+                </div>
+              </div>
+              
+            
           </AppBarContentRight> 
           
         

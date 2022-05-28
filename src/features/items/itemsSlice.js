@@ -94,15 +94,17 @@ export const getItems = createAsyncThunk('items/all', async (_, thunkAPI)=> {
 })
 
 // Update item
-export const UpdateItem = createAsyncThunk('item/create', async (itemData, thunkAPI)=> {
+export const UpdateItem = createAsyncThunk('item/update', async (itemData, thunkAPI)=> {
     // prepare items for api call
 
     const payload = JSON.stringify({
         query: `
         mutation{
-            createItem(uuid: "" name:"${itemData.name}" description:"${itemData.description}"){
+            updateItem(uuid: "${itemData.uuid}" name:"${itemData.name}" description:"${itemData.description}"){
+              _id
               uuid
               name
+              description
               created_at
               updated_at
             }
@@ -167,6 +169,19 @@ export const itemSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+        .addCase(createItem.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(createItem.fulfilled, (state, action) => {
+            state.isLoading= false
+            state.isSuccess = true
+            state.items.push(action.payload.data.createItem)
+        })
+        .addCase(createItem.rejected, (state, action) => {
+            state.isLoading= false
+            state.isError = true
+            state.message = action.payload
+        })
         .addCase(getItems.pending, (state) => {
             state.isLoading = true
         })
@@ -180,15 +195,17 @@ export const itemSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
-        .addCase(createItem.pending, (state) => {
+        .addCase(UpdateItem.pending, (state) => {
             state.isLoading = true
         })
-        .addCase(createItem.fulfilled, (state, action) => {
+        .addCase(UpdateItem.fulfilled, (state, action) => {
             state.isLoading= false
             state.isSuccess = true
-            state.items.push(action.payload.data.createItem)
+            const newData = action.payload.data.updateItem
+            state.items = state.items.filter((item) => item.uuid !== newData.uuid)
+            state.items.push(newData)
         })
-        .addCase(createItem.rejected, (state, action) => {
+        .addCase(UpdateItem.rejected, (state, action) => {
             state.isLoading= false
             state.isError = true
             state.message = action.payload

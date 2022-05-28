@@ -2,9 +2,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import styled from '@emotion/styled';
-import DialogActions from '@mui/material/DialogActions';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,6 +17,19 @@ const FormGroup = styled('div')({
     flexDirection: 'column',
     alignItems: 'flex-start',
     marginBottom: '20px'
+});
+
+const theme = createTheme({
+  palette: {
+    grey: {
+      main: '#999A9B',
+      contrastText: '#fff',
+    },
+    lightGrey: {
+      main: '#EFEFF0',
+      contrastText: '#20262F'
+    },
+  },
 });
 
 export default function NewItem() {
@@ -49,22 +61,20 @@ export default function NewItem() {
   return (
     <div>
       
-      <div className="fab">
-      <Fab color="primary" onClick={handleClickOpen} aria-label="add">
+      <div className="fab" style={open ? {  display: 'none' } : {}}>
+        <Fab color="primary" onClick={handleClickOpen} aria-label="add">
               <AddIcon />
         </Fab>
-        </div>
+      </div> 
       <Dialog open={open} onClose={handleClose}>
      
-        <DialogTitle>Create Item</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
-          </DialogContentText>
+        <DialogTitle style={{ height:'30px', borderBottom: '1px solid #EFEFF0' }}>Create Item</DialogTitle>
+       
+        <DialogContent style={{ width: '500px', height: '340px' }}>
+         
           <form>
           <FormGroup>
-            <label>Name</label>
+            <label style={{ marginTop: '26px', marginBottom:'5px', color:'#5F6166' }}>Name</label>
             <TextField autoFocus type={'text'} placeholder='Add Notes' required id="outlined-basic" fullWidth size="small" autoComplete='off' onChange={ (e)=>{
                 const name = e.target.value;
                 // TODO: Validation
@@ -75,7 +85,7 @@ export default function NewItem() {
             </FormGroup>
 
             <FormGroup>
-            <label>Add Notes</label>
+            <label style={{ marginTop: '16px', marginBottom:'5px', color:'#5F6166' }}>Add Notes</label>
             <TextField type={'text'} multiline rows={4} placeholder='Type your notes here' id="outlined-basic" fullWidth size="small" autoComplete='off' onChange={ (e)=>{
                 const description = e.target.value;
                 // TODO: Validation
@@ -84,12 +94,15 @@ export default function NewItem() {
                 setItemData({...itemData, description});
             }}  />
             </FormGroup>
+
+            <div style={{ textAlign:'right' }}>
+              <ThemeProvider theme={theme}>
+                <Button color='lightGrey'  variant="contained" onClick={handleClose} style={{ marginRight:'32px' }}>Cancel</Button>
+                <Button color='grey'  variant="contained" onClick={handleSubmit}>Create Event</Button>
+              </ThemeProvider>
+            </div>
             </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Create Event</Button>
-        </DialogActions>
       
       </Dialog>
     </div>
