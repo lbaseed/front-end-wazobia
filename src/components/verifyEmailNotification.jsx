@@ -6,9 +6,6 @@ import { toast } from 'react-toastify';
 
 
 
-
-
-
 const VerifyEmailBar = styled('div')({
     display: 'flex',
     alignItems: 'center',
@@ -24,10 +21,10 @@ const VerifyEmailNotification = () => {
 
   const handleResendVerification = () => {
     // resend verification link here
-    if(user){
+    
       dispatch(resendVerification())
       
-    }
+    
   }
   return (
     <>

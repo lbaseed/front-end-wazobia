@@ -34,37 +34,40 @@ const DashboardPage = () => {
 
   
 
-  const {user, isLoggedIn} = useSelector((state) => state.userAuth)
-  const {items, isLoading, isSuccess, isError, message} = useSelector((state) => state.items)
+  const {user} = useSelector((state) => state.userAuth)
+  const {items, isLoading, isError, message} = useSelector((state) => state.items)
   
   
     useEffect(() => {
+
       if (isError) {
         console.log(message)
       }
 
-      if(isLoggedIn === false) {
+      if(!user) {
         navigate('/login')
       }
 
-      dispatch(getItems())
+        dispatch(getItems())
+      
 
       return () => {
-        dispatch(reset())
+        // dispatch(reset())
       }
       
-    }, [user, navigate, isError, message, dispatch, isLoggedIn])
+    }, [user, navigate, isError, message, dispatch])
 
+    let banna
+    if(user){
+     banna = !user.user.email_verified_at ? <VerifyEmailNotification /> : ""
+    }
 
   return (
     <>
     <div className='container'>
         <DashBoardContent>
-          {/* check if acount is verified */}
-          {
-            user.user.email_verified_at === null ? <VerifyEmailNotification /> : ""
-          }
           
+          {banna}
           <TopAppBar />
  
           <div className="dashContainer">

@@ -10,7 +10,7 @@ const API_URL = 'https://test-api.sytbuilder.com/graphql'
 
 const initialState = {
     isLoggedIn: false,
-    user: null,
+    user: user? user : null,
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -97,7 +97,7 @@ const initialState = {
         const response = await axios.post(API_URL, payload, options)
 
         if(response.data){
-            localStorage.setItem('user', JSON.stringify(response.data))
+            // localStorage.setItem('user', JSON.stringify(response.data))
         }
         return response.data
       } catch (error) {
@@ -139,7 +139,7 @@ const initialState = {
   // verify email here
 
   export const verifyEmail = createAsyncThunk('userAuth/verifyEmail', async (vToken, thunkAPI) => {
-    console.log(vToken)
+
     // payload for api
     const payload = JSON.stringify({
       query: `
@@ -172,9 +172,9 @@ const initialState = {
   })
 
   // logout user
-  // export const logout = () => {
-  //   localStorage.removeItem('user');
-  // }
+  export const logout = createAsyncThunk('userAuth/logout', async ()=>{
+    localStorage.removeItem('user');
+  }) 
 
 
 export const userAuthSlice = createSlice({
@@ -188,15 +188,8 @@ export const userAuthSlice = createSlice({
           state.isSuccess = false
           state.isLoggedIn = false
           state.message = ''
-        },
-        logout: (state) =>{
-          // state.user = null
-          state.isLoggedIn = false
-          state.isError = false
-          state.isSuccess = false
-          state.message = "Logged Out"
-          console.log("am out")
         }
+        
     },
     extraReducers: (builder) => {
       builder
@@ -214,7 +207,7 @@ export const userAuthSlice = createSlice({
         .addCase(createAccount.rejected, (state, action) => {
           state.isLoading= false
           state.isError = true
-          state.message = action.payload.errors.message
+          state.message = action.payload
           state.user = null
         })
         .addCase(login.pending, (state) => {
@@ -222,6 +215,7 @@ export const userAuthSlice = createSlice({
         })
         .addCase(login.fulfilled, (state, action) => {
           state.isLoading = false
+          
           // check for successful login token
           if(action.payload.data.login){
             state.isLoggedIn = true
@@ -231,6 +225,7 @@ export const userAuthSlice = createSlice({
             state.message = "Login Success"
           }
           if(action.payload.errors){
+            state.isSuccess = true
             const msg = action.payload.errors.map((err)=> err.message)
             state.message = msg[0]
           }
@@ -239,7 +234,7 @@ export const userAuthSlice = createSlice({
         .addCase(login.rejected, (state, action) => {
           state.isLoading= false
           state.isError = true
-          state.message = action.payload.errors
+          state.message = action.payload
           state.user = null
         })
         .addCase(resendVerification.pending, (state) => {
@@ -252,7 +247,7 @@ export const userAuthSlice = createSlice({
         .addCase(resendVerification.rejected, (state, action) => {
           state.isLoading = false
           state.isError = true
-          state.message = action.payload.errors.message
+          state.message = action.payload
         })
         .addCase(verifyEmail.pending, (state) => {
           state.isLoading = true
@@ -264,12 +259,21 @@ export const userAuthSlice = createSlice({
         .addCase(verifyEmail.rejected, (state, action) => {
           state.isLoading = false
           state.isError = true
-          state.message = action.payload.errors.message
+          state.message = action.payload
         })
+        .addCase(logout.fulfilled, (state) => {
+          state.user = null
+          state.isLoggedIn = false
+          state.isError = false
+          state.isSuccess = false
+          state.message = "Logged Out"
+          console.log("am out")
+        })
+        
     }
       
 });
 
-export const {reset, logout} = userAuthSlice.actions;
+export const {reset} = userAuthSlice.actions;
 
 export default userAuthSlice.reducer;

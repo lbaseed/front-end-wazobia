@@ -41,11 +41,17 @@ const TopAppBar = () => {
   const {user} = useSelector((state) => state.userAuth)
 
   const onLogout = () => {
-    navigate('/login')
-    dispatch(logout())
-    // dispatch(reset())
-    dispatch(itemsReset())
     
+    dispatch(logout())
+    dispatch(reset())
+    dispatch(itemsReset())
+    navigate('/login')
+    
+  }
+
+  let loggedInUser;
+  if(user){
+    loggedInUser = user.user.first_name + " " + user.user.last_name
   }
   return (
     <>
@@ -59,12 +65,12 @@ const TopAppBar = () => {
               
 
               <div className="dropdown">
-              {user.user.first_name} {user.user.last_name}
+                {loggedInUser}
                 <button className="dropbtn"> 
                   <FaCaretDown />
                 </button>
                 <div className="dropdown-content">
-                <Link to='/logout' style={{ textDecoration:'none', marginLeft:'5px' }} >
+                <Link to='/' onClick={onLogout} style={{ textDecoration:'none', marginLeft:'5px' }} >
                 Log Out
                 </Link>
                 </div>

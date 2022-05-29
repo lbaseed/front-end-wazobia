@@ -63,6 +63,7 @@ const ItemCards = ({item}) => {
           setOpen(false)
         }
     }
+    
   return (
     <>
         <div className="card">

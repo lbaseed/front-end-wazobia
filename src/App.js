@@ -15,10 +15,9 @@ function App() {
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/login" element={<LoginUser />} />
-        <Route path="/logout" element={<Logout />} />
+        {/* <Route path="/logout" element={<Logout />} /> */}
         <Route path="/signup" element={<CreatAccount />} />
         <Route path="/email/verify/:vtoken" element={<CompleteVerification />} />
-
       </Routes> 
     </Router>
       <ToastContainer />

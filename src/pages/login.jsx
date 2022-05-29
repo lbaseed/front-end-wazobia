@@ -7,7 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {FaSignInAlt, FaSignOutAlt, FaUser} from 'react-icons/fa';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 // const style = {
@@ -60,31 +63,35 @@ const theme = createTheme({
 
 const LoginUser = () => {
   const [userState, setUserState] = useState({});
+  const [toggleShowPassword, setToggleShowPassword] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
 
-  const {isLoggedIn, user, isLoading, isSuccess, isError, message} = useSelector((state) => state.userAuth)
+  const {user, isLoading, isSuccess, isError, message} = useSelector((state) => state.userAuth)
 
 
   useEffect(() => {
 
     if(isError) { toast.error(message)}
 
-    if(isLoggedIn && user && isSuccess) { 
+    if(user || isSuccess) { 
+      
       navigate('/');
       toast.success(message);
-    }else if(message){
-      toast.error(message)
+
     }
 
-  }, [user, isError, isSuccess, message, isLoggedIn])
+  }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     dispatch(login(userState));
-}
+  }
+
+  const togglePassword = () =>  setToggleShowPassword(!toggleShowPassword)
+
 
   return (
     <>
@@ -110,13 +117,26 @@ const LoginUser = () => {
 
                     <FormGroup sx={{ marginTop:'22px' }}>
                     <label>Password</label>
-                    <TextField placeholder='Type your password here' type={'password'} id="outlined-basic" sx={{ width: 656 }} size="small" autoComplete='off' onChange={ (e)=>{
+                    <OutlinedInput placeholder='Type your password here' type={ toggleShowPassword ? "text": "password" } id="outlined-basic" sx={{ width: 656 }} size="small" autoComplete='off' onChange={ (e)=>{
                       const password = e.target.value;
                       // TODO: Validation
 
                       // add content to local state
                       setUserState({...userState, password});
-                    }} />
+                    }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={togglePassword}
+                          // onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {toggleShowPassword? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    />
                     </FormGroup>
                 </FormInputs>
                 

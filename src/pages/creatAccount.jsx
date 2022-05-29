@@ -3,15 +3,16 @@ import { styled } from '@mui/system';
 import { CssBaseline, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { createAccount, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Link as MuiLink } from '@mui/material';
-
-// const style = {
-    
-// }
+import usePasswordValidation from '../hooks/usePasswordValidation';
 
 const AccountCard = styled('div')({
     display: 'flex',
@@ -20,7 +21,7 @@ const AccountCard = styled('div')({
     backgroundColor: '#FFFFFF',
     border: '1px solid #F0F0F0',
     width: '720px',
-    height: '466px',
+    height: 'auto',
     maxHeight: '572px',
     borderRadius: '8px',
     padding: '24px, 32px, 40px, 32px',
@@ -62,7 +63,9 @@ const theme = createTheme({
 
 
 const CreatAccount = () => {
-  const [userState, setUserState] = useState({});
+  const [userState, setUserState] = useState({'password': ''});
+  const [toggleShowPassword, setToggleShowPassword] = useState(false)
+  const [upperCase, validLength, hasNumber, hasSymbol] = usePasswordValidation({ 'password':userState.password})
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -80,18 +83,20 @@ const CreatAccount = () => {
       navigate('/signup')
     }
 
-
   }, [user, isError, isSuccess, message, navigate, dispatch])
   
   const handleSubmit = (e) => {
       e.preventDefault();
-     
-      dispatch(createAccount(userState));
+     console.log(userState)
+      // dispatch(createAccount(userState));
   };
+
+  const togglePassword = () =>  setToggleShowPassword(!toggleShowPassword)
 
   // if(isLoading){
   //   // return spinner here
   // }
+  const testText = "";
 
 
   return (
@@ -106,7 +111,7 @@ const CreatAccount = () => {
                 <Row>
                     <FormGroup sx={{ marginTop:'22px' }}>
                     <label>First Name</label>
-                    <TextField placeholder='Type here' required id="outlined-basic" style={{ width:'320px' }} size="small" variant="outlined" autoComplete='off' onChange={ (e)=>{
+                    <TextField id='first_name' placeholder='Type here' required  style={{ width:'320px' }} size="small" variant="outlined" autoComplete='off' onChange={ (e)=>{
                       const first_name = e.target.value;
                       // TODO: Validation
 
@@ -117,7 +122,7 @@ const CreatAccount = () => {
                     
                     <FormGroup sx={{ marginTop:'22px' }}>
                     <label>Last Name</label>
-                    <TextField placeholder='Type here' required id="outlined-basic" sx={{ width:'320px', height:'20px' }} size="small" variant="outlined"  autoComplete='off' onChange={ (e)=>{
+                    <TextField id='last_name' placeholder='Type here' required  sx={{ width:'320px', height:'20px' }} size="small" variant="outlined"  autoComplete='off' onChange={ (e)=>{
                       const last_name = e.target.value;
                       // TODO: Validation
 
@@ -130,7 +135,7 @@ const CreatAccount = () => {
                 <FormInputs sx={{ marginTop:'22px' }}>
                     <FormGroup>
                     <label>Email</label>
-                    <TextField type={'email'} placeholder='Type your email address here' required id="outlined-basic" sx={{ width:656 }} size="small" autoComplete='off' onChange={ (e)=>{
+                    <TextField id="email" type={'email'} placeholder='Type your email address here' required sx={{ width:656 }} size="small" autoComplete='off' onChange={ (e)=>{
                       const email = e.target.value;
                       // TODO: Validation
 
@@ -141,13 +146,45 @@ const CreatAccount = () => {
 
                     <FormGroup sx={{ marginTop:'22px' }}>
                     <label>Password</label>
-                    <TextField placeholder='Type your password here' type={'password'} id="outlined-basic" sx={{ width: 656 }} size="small" autoComplete='off' onChange={ (e)=>{
+                    <OutlinedInput id='password' placeholder='Type your password here' type={toggleShowPassword ? "text": "password"} sx={{ width: 656 }} size="small" autoComplete='off' onChange={ (e)=>{
                       const password = e.target.value;
                       /// TODO: Validation
 
                       // add content to local state
                       setUserState({...userState, password});
-                    }} />
+                    }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={togglePassword}
+                          // onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {toggleShowPassword? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    />
+                    {(userState.password.length) > 0 ? (
+                      <div>
+                      <ul style={{ textAlign: 'left', padding: '0px', paddingLeft:'15px', fontSize: '12px', lineHeight:'18px', fontWeight: '400' }}>
+                          <li style={upperCase ? {color:'#07982F' } : {color:'#999B9F' }}>
+                            <span>Contains atleast one upperCase letter</span>
+                          </li>
+                          <li style={validLength ? {color:'#07982F' } : {color:'#999B9F' }}>
+                            <span>Contains eight characters</span>
+                          </li>
+                          <li style={hasNumber ? {color:'#07982F' } : {color:'#999B9F' }}>
+                            <span>Contains atleast one number</span>
+                          </li>
+                          <li style={hasSymbol ? {color:'#07982F' } : {color:'#999B9F' }}>
+                            <span>Contains atleast one symbol</span>
+                          </li>
+                      </ul>
+                    </div>
+                    ) : ""}
+                    
                     </FormGroup>
                 </FormInputs>
                 
