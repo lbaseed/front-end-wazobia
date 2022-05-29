@@ -9,7 +9,6 @@ const user = JSON.parse(localStorage.getItem('user'));
 const API_URL = 'https://test-api.sytbuilder.com/graphql'
 
 const initialState = {
-    isLoggedIn: false,
     user: user? user : null,
     isLoading: false,
     isSuccess: false,
@@ -95,11 +94,8 @@ const initialState = {
       }
       try { 
         const response = await axios.post(API_URL, payload, options)
-
-        if(response.data){
-            // localStorage.setItem('user', JSON.stringify(response.data))
-        }
         return response.data
+
       } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString() 
         return thunkAPI.rejectWithValue(message)
@@ -186,7 +182,6 @@ export const userAuthSlice = createSlice({
           state.isLoading = false
           state.isError = false
           state.isSuccess = false
-          state.isLoggedIn = false
           state.message = ''
         }
         
@@ -215,17 +210,18 @@ export const userAuthSlice = createSlice({
         })
         .addCase(login.fulfilled, (state, action) => {
           state.isLoading = false
-          
+          state.isError = false
           // check for successful login token
           if(action.payload.data.login){
-            state.isLoggedIn = true
+
             state.isSuccess = true
             state.user = action.payload.data.login
             localStorage.setItem('user', JSON.stringify(action.payload.data.login))
             state.message = "Login Success"
           }
           if(action.payload.errors){
-            state.isSuccess = true
+            // state.isSuccess = true
+            state.isError = true
             const msg = action.payload.errors.map((err)=> err.message)
             state.message = msg[0]
           }
@@ -254,7 +250,15 @@ export const userAuthSlice = createSlice({
         })
         .addCase(verifyEmail.fulfilled, (state, action) => {
           state.isLoading = false
+          state.isLoading = false
           state.message = action.payload.data.verifyMe.email
+
+          if(action.payload.errors){
+            // state.isSuccess = true
+            state.isLoading = false
+            const msg = action.payload.errors.map((err)=> err.message)
+            state.message = msg[0]
+          }
         })
         .addCase(verifyEmail.rejected, (state, action) => {
           state.isLoading = false
@@ -267,7 +271,7 @@ export const userAuthSlice = createSlice({
           state.isError = false
           state.isSuccess = false
           state.message = "Logged Out"
-          console.log("am out")
+          // console.log("am out")
         })
         
     }

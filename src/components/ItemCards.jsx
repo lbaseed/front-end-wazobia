@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteItem, UpdateItem } from '../features/items/itemsSlice';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -36,19 +36,20 @@ const ItemCards = ({item}) => {
     const dispatch = useDispatch()
 
     const [open, setOpen] = useState(false);
-    const [itemData, setItemData] = useState({});
 
     const [newName, setNewName] = useState(item.name)
     const [newDesc, setNewDesc] = useState(item.description)
 
     const handleClickOpen = () => {
       setOpen(true);
+      console.log(newName +", " + newDesc)
     };
 
     const handleClose = () => {
       setOpen(false);
     };
 
+    // submit data for update
     const handleSubmit = (e) => {
       e.preventDefault()
         
@@ -66,7 +67,7 @@ const ItemCards = ({item}) => {
     
   return (
     <>
-        <div className="card">
+        <div className="card" key={ item.uuid}>
               <span className="cardKey">Name</span>
               <span className="cardTitle">{item.name}</span>
               <span className="cardKey">DEscription</span>
@@ -93,7 +94,7 @@ const ItemCards = ({item}) => {
         <DialogContent style={{ width: '500px', height: '340px' }}>
          
           <form>
-          <FormGroup> {item.uuid}
+          <FormGroup>
             <label style={{ marginTop: '26px', marginBottom:'5px', color:'#5F6166' }}>Name</label>
             <TextField autoFocus type={'text'} placeholder='Add Notes' value={newName} required id="outlined-basic" fullWidth size="small" autoComplete='off' onChange={ (e)=>{
                 const newName = e.target.value;

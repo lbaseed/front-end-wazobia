@@ -11,6 +11,7 @@ import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Spinner from '../components/Spinner';
 
 
 // const style = {
@@ -75,12 +76,13 @@ const LoginUser = () => {
 
     if(isError) { toast.error(message)}
 
-    if(user || isSuccess) { 
+    if(isSuccess || user) { 
       
       navigate('/');
       toast.success(message);
 
     }
+    
 
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
@@ -101,6 +103,7 @@ const LoginUser = () => {
                 <span className="pageHead" >Log in</span>
                 <span >If you have no account, <Link to='/signup' style={{ textDecoration: 'none' }} >Sign Up</Link> </span>   
                 
+                  { isLoading ? (<div style={{ margin: 'auto' }}><Spinner /></div>) : ""}
             <form onSubmit={handleSubmit} > 
                 
                 <FormInputs sx={{ marginTop:'22px' }}>
@@ -131,6 +134,7 @@ const LoginUser = () => {
                           onClick={togglePassword}
                           // onMouseDown={handleMouseDownPassword}
                           edge="end"
+                          style={{ color:'#999F9B' }}
                         >
                           {toggleShowPassword? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                         </IconButton>

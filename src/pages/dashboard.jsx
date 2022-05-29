@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'
 import { getItems, reset } from '../features/items/itemsSlice';
+import Spinner from '../components/Spinner';
 
 
 const DashBoardContent = styled('div')({
@@ -48,7 +49,9 @@ const DashboardPage = () => {
         navigate('/login')
       }
 
+      if(user) {
         dispatch(getItems())
+      }
       
 
       return () => {
@@ -69,12 +72,12 @@ const DashboardPage = () => {
           
           {banna}
           <TopAppBar />
- 
           <div className="dashContainer">
-           
+          { isLoading ? (<div style={{ margin:'auto', marginTop:'50px' }}><Spinner /></div>) : ("")}
+
 
               {items.length > 0 ? (
-                <div className='goals'>
+                <div>
                   {items.map((item, i) => (
                     <ItemCards key={item._id} item={item} />
                   ))}

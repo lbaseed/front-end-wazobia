@@ -13,6 +13,7 @@ import { createAccount, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import usePasswordValidation from '../hooks/usePasswordValidation';
+import Spinner from '../components/Spinner';
 
 const AccountCard = styled('div')({
     display: 'flex',
@@ -69,34 +70,29 @@ const CreatAccount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {user, isLoggedIn, isLoading, isError, isSuccess, message} = useSelector((state) => state.userAuth)
+  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.userAuth)
 
   useEffect(() => {
 
     if(isError) { toast.error(message)}
 
-    if(isLoggedIn && user && isSuccess) { 
+    if(user && isSuccess) { 
       
       navigate('/')
       toast.success(message)
-    }else {
-      navigate('/signup')
     }
 
   }, [user, isError, isSuccess, message, navigate, dispatch])
   
   const handleSubmit = (e) => {
       e.preventDefault();
-     console.log(userState)
-      // dispatch(createAccount(userState));
+
+      dispatch(createAccount(userState));
   };
 
   const togglePassword = () =>  setToggleShowPassword(!toggleShowPassword)
 
-  // if(isLoading){
-  //   // return spinner here
-  // }
-  const testText = "";
+ 
 
 
   return (
@@ -106,7 +102,7 @@ const CreatAccount = () => {
             <AccountCard>   
                 <span className="pageHead" >Create an Account</span>
                 <span >Already have an account? <Link to='/login' style={{ textDecoration: 'none' }} >Login</Link> </span>   
-                
+                { isLoading ? (<div style={{ margin: 'auto' }}><Spinner /></div>) : ""}
             <form onSubmit={handleSubmit} >    
                 <Row>
                     <FormGroup sx={{ marginTop:'22px' }}>
@@ -160,6 +156,7 @@ const CreatAccount = () => {
                           onClick={togglePassword}
                           // onMouseDown={handleMouseDownPassword}
                           edge="end"
+                          style={{ color:'#999F9B' }}
                         >
                           {toggleShowPassword? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                         </IconButton>

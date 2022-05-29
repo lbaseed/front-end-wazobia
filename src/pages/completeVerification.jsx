@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import {BsCheckCircle, BsChevronRight} from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyEmail } from '../features/auth/auth';
+import Spinner from '../components/Spinner';
 
 const AccountCard = styled('div')({
     display: 'flex',
@@ -26,7 +27,7 @@ const AccountCard = styled('div')({
 
 const CompleteVerification = () => {
     const dispatch = useDispatch()
-    const {user, isLoading, message} = useSelector((state)=> state.userAuth)
+    const {isLoading, message} = useSelector((state)=> state.userAuth)
 
     let params  = useParams()
 
@@ -35,18 +36,18 @@ const CompleteVerification = () => {
         //perform email verification call here
         dispatch(verifyEmail(params.vtoken))
 
-    },[])
+    },[message])
 
-    if (isLoading){
-        // spinner
-    }
 
   return (
     <>
         <AccountCard>
 
             <div style={{ margin:'auto' }}>
-                <BsCheckCircle style={{ fontSize: '70px', margin: 'auto', marginBottom: '20px', color: '#07982F' }} />
+            { isLoading ? (<div style={{ margin: 'auto', marginBottom: '20px', marginLeft: '100px', color: '#07982F' }}><Spinner sx={{ color: '#07982F' }} /></div>) : 
+            (<BsCheckCircle style={{ fontSize: '70px', margin: 'auto', marginBottom: '20px', color: '#07982F' }} />)
+            }
+                
                 <p>Your Email Address {message} has been verified</p>
                 <Link to='/login' style={{ textDecoration: 'none' }}>
                     Go to Dashboard <BsChevronRight />
