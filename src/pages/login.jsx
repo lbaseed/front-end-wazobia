@@ -64,7 +64,7 @@ const LoginUser = () => {
   const dispatch = useDispatch();
 
 
-  const {isLoggedIn, isLoggedOut, user, isLoading, isSuccess, isError, message} = useSelector((state) => state.userAuth)
+  const {isLoggedIn, user, isLoading, isSuccess, isError, message} = useSelector((state) => state.userAuth)
 
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const LoginUser = () => {
       toast.error(message)
     }
 
-  }, [user, isError, isSuccess, message, navigate, dispatch, isLoggedOut, isLoggedIn])
+  }, [user, isError, isSuccess, message, isLoggedIn])
 
   const handleSubmit = (e) => {
     e.preventDefault();

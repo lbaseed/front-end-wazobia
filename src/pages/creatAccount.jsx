@@ -66,15 +66,20 @@ const CreatAccount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.userAuth)
+  const {user, isLoggedIn, isLoading, isError, isSuccess, message} = useSelector((state) => state.userAuth)
 
   useEffect(() => {
 
     if(isError) { toast.error(message)}
 
-    if(isSuccess || user) { navigate('/')}
+    if(isLoggedIn && user && isSuccess) { 
+      
+      navigate('/')
+      toast.success(message)
+    }else {
+      navigate('/signup')
+    }
 
-    dispatch(reset())
 
   }, [user, isError, isSuccess, message, navigate, dispatch])
   

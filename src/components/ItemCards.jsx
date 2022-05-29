@@ -71,8 +71,6 @@ const ItemCards = ({item}) => {
               <span className="cardKey">DEscription</span>
               <div className="cardContent">
                 {item.description} 
-                
-                {item.uuid}
               </div>
               
                 <div className="cardButtons">

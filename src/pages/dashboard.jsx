@@ -34,8 +34,8 @@ const DashboardPage = () => {
 
   
 
-  const {user} = useSelector((state) => state.userAuth)
-  const {items, isLoading, isError, message} = useSelector((state) => state.items)
+  const {user, isLoggedIn} = useSelector((state) => state.userAuth)
+  const {items, isLoading, isSuccess, isError, message} = useSelector((state) => state.items)
   
   
     useEffect(() => {
@@ -43,7 +43,7 @@ const DashboardPage = () => {
         console.log(message)
       }
 
-      if(!user) {
+      if(isLoggedIn === false) {
         navigate('/login')
       }
 
@@ -53,7 +53,7 @@ const DashboardPage = () => {
         dispatch(reset())
       }
       
-    }, [user, navigate, isError, message, dispatch])
+    }, [user, navigate, isError, message, dispatch, isLoggedIn])
 
 
   return (
