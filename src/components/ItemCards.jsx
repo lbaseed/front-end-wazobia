@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
+
 const FormGroup = styled('div')({
   display:'flex',
   flexDirection: 'column',
@@ -42,7 +43,6 @@ const ItemCards = ({item}) => {
 
     const handleClickOpen = () => {
       setOpen(true);
-      console.log(newName +", " + newDesc)
     };
 
     const handleClose = () => {
@@ -64,7 +64,8 @@ const ItemCards = ({item}) => {
           setOpen(false)
         }
     }
-    
+
+   
   return (
     <>
         <div className="card" key={ item.uuid}>

@@ -7,13 +7,14 @@ import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { createAccount, reset } from '../features/auth/auth';
 import {Link, useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import usePasswordValidation from '../hooks/usePasswordValidation';
 import Spinner from '../components/Spinner';
+import validator from 'validator'
+
 
 const AccountCard = styled('div')({
     display: 'flex',
@@ -64,7 +65,8 @@ const theme = createTheme({
 
 
 const CreatAccount = () => {
-  const [userState, setUserState] = useState({'password': ''});
+  const [userState, setUserState] = useState({'password': '', 'email': ''});
+  const [isEmail, setIsEmail] = useState(null)
   const [toggleShowPassword, setToggleShowPassword] = useState(false)
   const [upperCase, validLength, hasNumber, hasSymbol] = usePasswordValidation({ 'password':userState.password})
   const dispatch = useDispatch();
@@ -136,8 +138,18 @@ const CreatAccount = () => {
                       // TODO: Validation
 
                       // add content to local state
-                      setUserState({...userState, email});
+                      validator.isEmail(email) ? setIsEmail(true) : setIsEmail(false)
+                      
+                      if(email.length > 0) setUserState({...userState, email});
+                      
                     }}  />
+                    {(userState.email.length) > 0 ? (
+                      <div>
+                        {isEmail ? (<span style={{ color: '#07982F', fontSize: '12px' }}>correct email format</span>)
+                         : 
+                        (<span style={{ color: '#F41E10', fontSize: '12px' }}>wrong email format</span>)}
+                      </div>
+                    ) : ""}
                     </FormGroup>
 
                     <FormGroup sx={{ marginTop:'22px' }}>

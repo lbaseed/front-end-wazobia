@@ -5,6 +5,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   
 }
+@font-face {
+  font-family: Avenir;
+  src: local('Avenir'), url(./fonts/Avenir.otf) format('otf');
+}
 
 code {
   font-family: Avenir;
